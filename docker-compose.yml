@@ -1,0 +1,16 @@
+# Sobe um SQL Server local em container, usado pela API via EF Core.
+# Comandos: `docker compose up -d` (subir) / `docker compose down` (parar e remover o container).
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: bankingapi-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"              # exigido pela Microsoft para rodar a imagem
+      MSSQL_SA_PASSWORD: "yourStrong(!)Password" # senha de exemplo (Microsoft) para dev local — troque em qualquer ambiente real
+    ports:
+      - "1433:1433"                 # porta_host:porta_container — expõe o SQL Server em localhost:1433
+    volumes:
+      - sqlserver_data:/var/opt/mssql # persiste os dados fora do container (sobrevivem a `docker compose down`)
+
+volumes:
+  sqlserver_data:
